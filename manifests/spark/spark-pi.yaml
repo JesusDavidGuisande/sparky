@@ -1,0 +1,29 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: spark-pi
+  namespace: spark
+spec:
+  type: Scala
+  mode: cluster
+  sparkVersion: "4.0.3"
+  image: apache/spark:4.0.3
+  imagePullPolicy: IfNotPresent
+  mainClass: org.apache.spark.examples.SparkPi
+  mainApplicationFile: local:///opt/spark/examples/jars/spark-examples_2.13-4.0.3.jar
+  arguments:
+    - "1000"
+  restartPolicy:
+    type: Never
+  driver:
+    cores: 1
+    memory: 512m
+    serviceAccount: spark-runner
+    labels:
+      app: spark-pi
+  executor:
+    instances: 2
+    cores: 1
+    memory: 512m
+    labels:
+      app: spark-pi
